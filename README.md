@@ -38,9 +38,12 @@ The plugin adds a shuffle button to the media controls, located next to the loop
 
 When shuffle is enabled, the next track will be randomly selected from the playlist.
 
+<img width="944" height="276" alt="image" src="https://github.com/user-attachments/assets/8be2ecad-5f74-459e-b3e0-891d16c81ee2" />
+
 ## Configuration
 You can configure the plugin by editing the `BepInEx/config/BetterMediaControls.cfg` file.
 The available configuration options are:
 - `MusicDirectory`: The directory where custom music files are stored (default: `music` [starting from plugin directory]).
 - `EnableShuffle`: Enable or disable shuffle functionality (default: true).
+
 - `EnableVanillaMusic`: Enable or disable the default music tracks (default: true).
