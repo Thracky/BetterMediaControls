@@ -1,0 +1,60 @@
+name: Publish to Thunderstore
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build -c Release --no-restore
+
+      - name: Prepare Thunderstore package
+        run: |
+          mkdir -p thunderstore/BepInEx/plugins/BetterMediaControls
+
+          # plugin dll
+          cp bin/Release/netstandard2.1/BetterMediaControls.dll \
+             thunderstore/BepInEx/plugins/BetterMediaControls/
+
+          # runtime assets
+          cp -r audio thunderstore/BepInEx/plugins/BetterMediaControls/ || true
+          cp -r icons thunderstore/BepInEx/plugins/BetterMediaControls/ || true
+
+          # thunderstore metadata
+          cp manifest.json thunderstore/
+          cp README.md thunderstore/
+          cp icon.png thunderstore/
+
+      - name: Upload Thunderstore Package
+        uses: GreenTF/upload-thunderstore-package@v4.3
+        with:
+          path: thunderstore
+          community: on-together
+          namespace: CutiePatooties
+          name: BetterMediaControls
+          version: ${{ github.ref_name }}
+          description: Better media controls with shuffle, playlists, and custom audio.
+          token: ${{ secrets.THUNDERSTORE_TOKEN }}
+          website: https://github.com/${{ github.repository }}
+          categories: |
+            Mods
+            Tools
+            Audio
+          deps: |
+            BepInEx-BepInExPack-5.4.2100
